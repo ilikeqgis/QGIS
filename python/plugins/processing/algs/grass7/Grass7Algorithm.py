@@ -744,13 +744,11 @@ class Grass7Algorithm(QgsProcessingAlgorithm):
         for cmd in [self.commands, self.outputCommands]:
             # TODO Windows support
             # TODO Format/options support
-            cmd.append("for r in $(g.list type=rast pattern='{}*'); do".format(basename))
-            cmd.append("  r.out.gdal -m{0} input=${{r}} output={1}/${{r}}.tif {2}".format(
+            cmd.append("for /f %%r in ('\"g.list type=rast\"'); do r.out.gdal -m{0} input=%%r output={1}/%%r.tif {2}".format(
                 ' -t' if colorTable else '', outDir,
-                '--overwrite -c createopt="TFW=YES,COMPRESS=LZW"'
+                '--overwrite -c createopt=\"TFW=YES,COMPRESS=LZW\"'
             )
             )
-            cmd.append("done")
 
     def loadVectorLayerFromParameter(self, name, parameters, context, external=False):
         """
